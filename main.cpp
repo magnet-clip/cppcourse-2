@@ -6,16 +6,36 @@
 #include <vector>
 using namespace std;
 
-int main() {
-  uint32_t N;
-  uint64_t R;
-  cin >> N >> R;
+template <typename T> T Sqr(const T &param) { return param * param; }
 
-  uint64_t mass = 0;
-  for (uint32_t i = 0; i < N; i++) {
-    uint64_t W, H, D;
-    cin >> W >> H >> D;
-    mass += R * W * H * D;
+template <typename T> vector<T> Sqr(const vector<T> &param) {
+  vector<T> res;
+  for (const auto &item : param) {
+    res.push_back(item * item);
   }
-  cout << mass << endl;
+  return res;
+}
+
+template <typename T, typename U> map<T, U> Sqr(const map<T, U> &param) {
+  map<T, U> res;
+  for (const auto &item : param) {
+    res[item.first] = item.second * item.second;
+  }
+  return res;
+}
+
+int main() {
+  // Пример вызова функции
+  vector<int> v = {1, 2, 3};
+  cout << "vector:";
+  for (int x : Sqr(v)) {
+    cout << ' ' << x;
+  }
+  cout << endl;
+
+  map<int, pair<int, int>> map_of_pairs = {{4, {2, 2}}, {7, {4, 3}}};
+  cout << "map of pairs:" << endl;
+  for (const auto &x : Sqr(map_of_pairs)) {
+    cout << x.first << ' ' << x.second.first << ' ' << x.second.second << endl;
+  }
 }
