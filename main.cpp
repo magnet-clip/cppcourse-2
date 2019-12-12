@@ -93,7 +93,7 @@ ostream &operator<<(ostream &os, const StopsForBusResponse &r) {
 }
 
 struct AllBusesResponse {
-  map<string, vector<string>> buses;
+   map<string, vector<string>> buses;
 };
 
 ostream &operator<<(ostream &os, const AllBusesResponse &r) {
