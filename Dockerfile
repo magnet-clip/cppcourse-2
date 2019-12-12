@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 LABEL Name=cppcourse-2 Version=0.0.1
-RUN apt-get -y update && apt-get install -y git cmake make g++ gcc
+RUN apt-get -y update && apt-get install -y git cmake make g++ gcc gdb
 COPY ./*.cpp /usr/dev/cppcourse-2/
 COPY ./*.sh  /usr/dev/cppcourse-2/
 COPY ./*.txt  /usr/dev/cppcourse-2/
