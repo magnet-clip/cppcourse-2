@@ -90,12 +90,98 @@ private:
 };
 
 bool IsPalindrom(const string &str) {
-  // Вы можете вставлять сюда различные реализации функции, чтобы проверить, что
-  // ваши тесты пропускают корректный код и ловят некорректный
+  int pos_start = 0, pos_end = str.length() - 1;
+  auto res = true;
+  while ((pos_start < pos_end) && res) {
+    res &= str[pos_start++] == str[pos_end--];
+  }
+  return res;
+}
+
+void TestEmptyStringIsPalindrom() { Assert(IsPalindrom(""), "Empty"); }
+
+void TestOneLetterStrings() {
+  Assert(IsPalindrom("a"), "a");
+  Assert(IsPalindrom("b"), "b");
+  Assert(IsPalindrom("_"), "_");
+  // Assert(IsPalindrom("ф"), "ф");
+  Assert(IsPalindrom("1"), "1");
+}
+
+void TestTwoLetterStrings() {
+  Assert(IsPalindrom("aa"), "aa");
+  Assert(IsPalindrom("bb"), "bb");
+  Assert(!IsPalindrom("ab"), "ab");
+  Assert(!IsPalindrom("ba"), "ba");
+  Assert(IsPalindrom("__"), "__");
+}
+
+void TestThreeLetterStrings() {
+  Assert(IsPalindrom("aaa"), "aaa");
+  Assert(IsPalindrom("bab"), "bab");
+  Assert(IsPalindrom("aba"), "aba");
+  Assert(!IsPalindrom("baa"), "baa");
+  Assert(!IsPalindrom("abb"), "abb");
+  Assert(IsPalindrom("___"), "___");
+}
+
+void TestLongerStrings() {
+  Assert(IsPalindrom("aaaa"), "aaaa");
+  Assert(IsPalindrom("abba"), "abba");
+  Assert(!IsPalindrom("aaba"), "aaba");
+  Assert(!IsPalindrom("abaa"), "abaa");
+  Assert(!IsPalindrom("aaaA"), "aaaA");
+  Assert(IsPalindrom("AaaA"), "AaaA");
+  Assert(IsPalindrom("aavaa"), "aavaa");
+  Assert(!IsPalindrom("abvaa"), "abvaa");
+  Assert(IsPalindrom("madam"), "madam");
+  Assert(IsPalindrom("level"), "level");
+  Assert(!IsPalindrom("leve1"), "leve1");
+  Assert(!IsPalindrom("1evel"), "1evel");
+  Assert(IsPalindrom("777777"), "777777");
+  Assert(!IsPalindrom("777778"), "777778");
+  Assert(!IsPalindrom("XabbaY"), "XabbaY");
+  Assert(IsPalindrom("wasitacaroracatisaw"), "wasitacaroracatisaw");
+  Assert(!IsPalindrom("madam level"), "madam level");
+  Assert(!IsPalindrom("gentleman"), "gentleman ");
+  Assert(!IsPalindrom("world"), "world");
+  Assert(!IsPalindrom("hello"), "hello");
+  Assert(!IsPalindrom("madaM"), "madaM ");
+  Assert(!IsPalindrom("Madam"), "Madam");
+  Assert(!IsPalindrom("madamworldmadam"), "madamworldmadam");
+  Assert(IsPalindrom("madammadam"), "madammadam");
+  Assert(IsPalindrom("madammadammadammadam"), "madammadammadammadam");
+  Assert(IsPalindrom("madammadammadammadammadammadammadammadam"),
+         "madammadammadammadammadammadammadammadam");
+}
+
+void TestSpaces() {
+  Assert(!IsPalindrom(" madam"), "_madam");
+  Assert(!IsPalindrom("madam "), "madam_");
+  Assert(!IsPalindrom("madam "), "madam_");
+  Assert(!IsPalindrom("Amadam "), "Amadam_");
+  Assert(!IsPalindrom("madamA "), "madamA_");
+  Assert(IsPalindrom(" madam "), "_madam_");
+  Assert(!IsPalindrom("  madam "), "__madam_");
+  Assert(IsPalindrom("  madam  "), "__madam__");
+  Assert(IsPalindrom("  ma d am  "), "__ma_d_am__");
+  Assert(IsPalindrom("  ma   am  "), "__ma___am__");
+  Assert(IsPalindrom("  ma     am  "), "__ma_____am__");
+  Assert(IsPalindrom("   "), "   ");
+  Assert(IsPalindrom("  "), "  ");
+  Assert(IsPalindrom(" "), " ");
+  Assert(IsPalindrom(" _ "), " _ ");
+  Assert(IsPalindrom("^_^"), "^_^");
 }
 
 int main() {
   TestRunner runner;
-  // добавьте сюда свои тесты
+  runner.RunTest(TestEmptyStringIsPalindrom, "TestEmptyStringIsPalindrom");
+  runner.RunTest(TestOneLetterStrings, "TestOneLetterStrings");
+  runner.RunTest(TestTwoLetterStrings, "TestTwoLetterStrings");
+  runner.RunTest(TestThreeLetterStrings, "TestThreeLetterStrings");
+  runner.RunTest(TestLongerStrings, "TestLongerStrings");
+  runner.RunTest(TestSpaces, "TestSpaces");
+
   return 0;
 }
