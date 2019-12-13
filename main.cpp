@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <map>
@@ -68,7 +69,7 @@ ostream &operator<<(ostream &os, const BusesForStopResponse &r) {
   return os;
 }
 
-using StopsForBusResponse = map<string, vector<string>>;
+using StopsForBusResponse = vector<pair<string, vector<string>>>;
 
 ostream &operator<<(ostream &os, const StopsForBusResponse &r) {
   if (!r.size()) {
@@ -93,7 +94,7 @@ ostream &operator<<(ostream &os, const StopsForBusResponse &r) {
 }
 
 struct AllBusesResponse {
-   map<string, vector<string>> buses;
+  map<string, vector<string>> buses;
 };
 
 ostream &operator<<(ostream &os, const AllBusesResponse &r) {
@@ -119,46 +120,42 @@ ostream &operator<<(ostream &os, const AllBusesResponse &r) {
 
 class BusManager {
 private:
-  map<string, vector<string>> buses_to_stops;
-  map<string, vector<string>> stops_to_buses;
+  map<string, vector<string>> stops_for_bus;
+  map<string, vector<string>> buses_for_stop;
 
 public:
   void AddBus(const string &bus, const vector<string> &stops) {
-    for (const auto &stop : stops) {
-      buses_to_stops[bus].push_back(stop);
-      stops_to_buses[stop].push_back(bus);
+    for (auto stop : stops) {
+      stops_for_bus[bus].push_back(stop);
+      buses_for_stop[stop].push_back(bus);
     }
   }
 
   BusesForStopResponse GetBusesForStop(const string &stop) const {
-    if (stops_to_buses.count(stop) == 0) {
+    if (!buses_for_stop.count(stop)) {
       return {};
     } else {
-      return {stops_to_buses.at(stop)};
+      return buses_for_stop.at(stop);
     }
   }
 
   StopsForBusResponse GetStopsForBus(const string &bus) const {
-    if (buses_to_stops.count(bus) == 0) {
+    if (!stops_for_bus.count(bus)) {
       return {};
     } else {
-      map<string, vector<string>> response;
-      for (const string &stop : buses_to_stops.at(bus)) {
-        if (stops_to_buses.at(stop).size() == 1) {
-          response[stop] = {};
-        } else {
-          for (const string &other_bus : stops_to_buses.at(stop)) {
-            if (bus != other_bus) {
-              response[stop].push_back(other_bus);
-            }
-          }
-        }
+      vector<pair<string, vector<string>>> res;
+      for (auto stop : stops_for_bus.at(bus)) {
+        vector<string> buses_for_this_stop = buses_for_stop.at(stop);
+        auto search_iterator =
+            find(buses_for_this_stop.begin(), buses_for_this_stop.end(), bus);
+        buses_for_this_stop.erase(search_iterator);
+        res.push_back(make_pair(stop, buses_for_this_stop));
       }
-      return {response};
+      return {res};
     }
   }
 
-  AllBusesResponse GetAllBuses() const { return {buses_to_stops}; }
+  AllBusesResponse GetAllBuses() const { return {stops_for_bus}; }
 };
 
 template <class T> ostream &operator<<(ostream &os, const set<T> &s) {
@@ -237,6 +234,49 @@ private:
   int fail_count = 0;
 };
 
+// template <typename T, typename U>
+// bool operator==(const pair<T, U> &p1, const pair<T, U> &p2) {
+//   return p1.first == p2.first && p1.second == p2.second;
+// }
+
+// template <typename T, typename U>
+// bool operator!=(const pair<T, U> &p1, const pair<T, U> &p2) {
+//   return !(p1 == p2);
+// }
+
+// template <typename T>
+// bool operator==(const vector<T> &p1, const vector<T> &p2) {
+//   if (p1.size() != p2.size())
+//     return false;
+//   for (auto i = 0; i < p1.size(); i++) {
+//     if (p1[i] != p2[i])
+//       return false;
+//   }
+//   return true;
+// }
+
+// template <typename T>
+// bool operator!=(const vector<T> &p1, const vector<T> &p2) {
+//   return !(p1 == p2);
+// }
+
+// template <typename T, typename U>
+// bool operator==(const vector<pair<T, vector<U>>> &p1,
+//                 const vector<pair<T, vector<U>>> &p2) {
+//   if (p1.size() != p2.size())
+//     return false;
+//   for (auto i = 0; i < p1.size(); i++) {
+//     if (p1[i] != p2[i])
+//       return false;
+//   }
+//   return true;
+// }
+
+// template <typename T, typename U>
+// bool operator!=(const vector<pair<T, vector<U>>> &p1,
+//                 const vector<pair<T, vector<U>>> &p2) {
+//   return !(p1 == p2);
+// }
 void TestExact() {
   BusManager bm;
   bm.AddBus("32", {"Tolstopaltsevo", "Marushkino", "Vnukovo"});
@@ -250,21 +290,11 @@ void TestExact() {
                     "Solntsevo", "Troparyovo"});
   bm.AddBus("272", {"Vnukovo", "Moskovsky", "Rumyantsevo", "Troparyovo"});
 
-  map<string, vector<string>> y = {{"Vnukovo", {"32", "32K", "950"}},
-                                   {"Moskovsky", {}},
-                                   {"Rumyantsevo", {}},
-                                   {"Troparyovo", {"950"}}};
+  vector<pair<string, vector<string>>> y = {{"Vnukovo", {"32", "32K", "950"}},
+                                            {"Moskovsky", {}},
+                                            {"Rumyantsevo", {}},
+                                            {"Troparyovo", {"950"}}};
   AssertEqual(bm.GetStopsForBus("272"), y, "Order 1");
-
-  map<string, vector<string>> z = {
-      {"Rumyantsevo", {}},
-      {"Troparyovo", {"950"}},
-      {"Vnukovo", {"32", "32K", "950"}},
-      {"Moskovsky", {}},
-  };
-  AssertEqual(bm.GetStopsForBus("272"), z, "Order 2");
-
-  cout << bm.GetStopsForBus("272") << endl;
 }
 
 void TestStopsExist() {
@@ -297,7 +327,8 @@ void TestStopsForBus() {
   bm.AddBus("AAA", {"A1", "A2", "A3"});
   bm.AddBus("BBB", {"A1", "B1", "B2"});
 
-  map<string, vector<string>> y = {{"A1", {"BBB"}}, {"A2", {}}, {"A3", {}}};
+  vector<pair<string, vector<string>>> y = {
+      {"A1", {"BBB"}}, {"A2", {}}, {"A3", {}}};
   AssertEqual(bm.GetStopsForBus("AAA"), y, "Order");
   // AssertEqual(bm.GetStopsForBus("BBB"), x, "Order");
 }
@@ -312,7 +343,7 @@ void TestAll() {
 }
 
 int main() {
-  TestAll();
+  // TestAll();
 
   int query_count;
   Query q;
