@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
 project (main)
-add_executable(main main.cpp)
+include_directories(${PROJECT_SOURCE_DIR})
+add_executable(main main.cpp sum_reverse_sort.cpp)
 set_property(TARGET main PROPERTY CXX_STANDARD 17)
-configure_file(input.txt input.txt)
