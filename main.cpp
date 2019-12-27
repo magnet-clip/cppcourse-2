@@ -1,4 +1,7 @@
+#include "query.h"
+#include "responses.h"
 #include "test_runner.h"
+
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -9,115 +12,6 @@
 #include <vector>
 
 using namespace std;
-
-enum class QueryType { NewBus, BusesForStop, StopsForBus, AllBuses };
-
-struct Query {
-  QueryType type;
-  string bus;
-  string stop;
-  vector<string> stops;
-};
-
-istream &operator>>(istream &is, Query &q) {
-  string operation_code;
-  is >> operation_code;
-
-  if (operation_code == "NEW_BUS") {
-    string bus;
-    is >> bus;
-
-    int stop_count;
-    is >> stop_count;
-
-    vector<string> stops;
-    stops.resize(stop_count);
-    for (string &stop : stops) {
-      is >> stop;
-    }
-
-    q.type = QueryType::NewBus;
-    q.bus = bus;
-    q.stops = stops;
-  } else if (operation_code == "BUSES_FOR_STOP") {
-    string stop;
-    cin >> stop;
-
-    q.type = QueryType::BusesForStop;
-    q.stop = stop;
-  } else if (operation_code == "STOPS_FOR_BUS") {
-    string bus;
-    cin >> bus;
-
-    q.type = QueryType::StopsForBus;
-    q.bus = bus;
-  } else if (operation_code == "ALL_BUSES") {
-    q.type = QueryType::AllBuses;
-  }
-  return is;
-}
-
-using BusesForStopResponse = vector<string>;
-
-ostream &operator<<(ostream &os, const BusesForStopResponse &r) {
-  if (r.size() > 0) {
-    for (const auto &item : r) {
-      os << item << " ";
-    }
-  } else {
-    os << "No stop";
-  }
-  return os;
-}
-
-using StopsForBusResponse = vector<pair<string, vector<string>>>;
-
-ostream &operator<<(ostream &os, const StopsForBusResponse &r) {
-  if (!r.size()) {
-    os << "No bus";
-  } else {
-    auto i = 0;
-    for (const auto &[stop, buses] : r) {
-      os << "Stop " << stop << ": ";
-      if (!buses.size()) {
-        os << "no interchange";
-      } else {
-        for (const string &bus : buses) {
-          os << bus << " ";
-        }
-      }
-      if (++i < r.size()) {
-        os << endl;
-      }
-    }
-  }
-  return os;
-}
-
-struct AllBusesResponse {
-  map<string, vector<string>> buses;
-};
-
-ostream &operator<<(ostream &os, const AllBusesResponse &r) {
-  const auto &buses_to_stops = r.buses;
-
-  if (buses_to_stops.empty()) {
-    os << "No buses";
-  } else {
-    auto i = 0;
-    for (const auto &[bus, stops] : buses_to_stops) {
-      os << "Bus " << bus << ": ";
-      for (const string &stop : stops) {
-        os << stop << " ";
-      }
-      if (++i < stops.size()) {
-        os << endl;
-      }
-    }
-  }
-
-  return os;
-}
 
 class BusManager {
 private:
