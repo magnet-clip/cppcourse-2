@@ -44,7 +44,8 @@ void AssertEqual(const T &t, const U &u, const string &hint) {
     throw runtime_error(os.str());
   }
 }
-inline void Assert(bool b, const string &hint);
+
+inline void Assert(bool b, const string &hint) { AssertEqual(b, true, hint); }
 
 class TestRunner {
 public:

@@ -28,13 +28,13 @@ PhoneNumber::PhoneNumber(const string &international_number) {
 
   input >> plus >> country >> m1 >> city >> m2 >> local;
   if (input.bad() || !input.eof()) {
-    throw new invalid_argument("Failed to parse phone number");
+    throw invalid_argument("Failed to parse phone number");
   }
   if (plus != '+') {
-    throw new invalid_argument("Phone should start with a + sign");
+    throw invalid_argument("Phone should start with a + sign");
   }
   if (m1 != '-' || m2 != '-') {
-    throw new invalid_argument("Delimiters should be -");
+    throw invalid_argument("Delimiters should be -");
   }
 
   this->country_code_ = to_string(country);
