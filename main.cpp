@@ -69,7 +69,7 @@ void TestAll() {
 }
 
 int main() {
-  TestAll();
+  // TestAll();
 
   int query_count;
   Query q;
