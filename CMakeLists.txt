@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
 project (main)
 include_directories(${PROJECT_SOURCE_DIR})
-add_executable(main main.cpp query.cpp responses.cpp bus_manager.cpp test_runner.cpp)
+add_executable(main main.cpp test_runner.cpp test.cpp)
 set_property(TARGET main PROPERTY CXX_STANDARD 17)
