@@ -1,4 +1,5 @@
 #include "test_runner.h"
+#include <string>
 
 void TestRunner::a() { cout << "A" << endl; }
 

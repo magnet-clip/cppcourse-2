@@ -9,6 +9,20 @@
 
 using namespace std;
 
+// template <typename T> bool operator==(const set<T> &a, const set<T> &b) {
+//   if (a.size() != b.size()) {
+//     return false;
+//   }
+
+//   for (const auto &item : a) {
+//     if (!b.count(item)) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// }
+
 template <class T> ostream &operator<<(ostream &os, const set<T> &s) {
   os << "{";
   bool first = true;
