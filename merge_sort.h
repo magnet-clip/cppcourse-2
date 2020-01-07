@@ -16,27 +16,17 @@ using namespace std;
 
 template <typename RandomIt>
 void MergeSort(RandomIt range_begin, RandomIt range_end) {
-  //   cout << "---->> " << endl;
-  //   print(range_begin, range_end);
   auto length = distance(range_begin, range_end);
   if (length < 2) {
     return;
   }
   vector<typename RandomIt::value_type> elements(range_begin, range_end);
-  auto middle = elements.begin() + length / 2;
-  MergeSort(elements.begin(), middle);
-  MergeSort(middle, elements.end());
-
-  merge(elements.begin(), middle, middle, elements.end(), range_begin);
-
-  //   vector<typename RandomIt::value_type> elements1(range_begin, middle);
-  //   MergeSort(elements1.begin(), elements1.end());
-  //   vector<typename RandomIt::value_type> elements2(next(middle), range_end);
-  //   MergeSort(elements2.begin(), elements2.end());
-  //   merge(elements1.begin(), elements1.end(), elements2.begin(),
-  //   elements2.end(),
-  //         range_begin);
-  //   cout << " result " << endl;
-  //   print(range_begin, range_end);
-  //   cout << "<<---- " << endl;
+  auto p1 = elements.begin() + length / 3;
+  MergeSort(elements.begin(), p1);
+  auto p2 = p1 + length / 3;
+  MergeSort(p1, p2);
+  MergeSort(p2, elements.end());
+  vector<typename RandomIt::value_type> temp;
+  merge(elements.begin(), p1, p1, p2, back_inserter(temp));
+  merge(temp.begin(), temp.end(), p2, elements.end(), range_begin);
 }
