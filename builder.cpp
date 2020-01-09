@@ -36,14 +36,36 @@ void ExpressionBuilder::addOperation(const Operation &op) {
   this->operations.push_back(op);
 }
 
+int p(const OperationType &t) {
+  switch (t) {
+  case OperationType::add:
+  case OperationType::sub:
+    return 1;
+  case OperationType::mul:
+  case OperationType::div:
+    return 2;
+  }
+}
+
+bool priority(const OperationType &newOp, const OperationType *oldOp) {
+  if (oldOp == nullptr) {
+    return false;
+  }
+  return p(newOp) > p(*oldOp);
+}
+
 string ExpressionBuilder::build() const {
   deque<string> items;
   items.push_back(to_string(this->source));
+  const OperationType *prev = nullptr;
   for (const auto &operation : this->operations) {
-    items.push_front("(");
-    items.push_back(")");
+    if (priority(operation.type, prev)) {
+      items.push_front("(");
+      items.push_back(")");
+    }
     items.push_back(as_string(operation.type));
     items.push_back(to_string(operation.value));
+    prev = &(operation.type);
   }
   return join(items.begin(), items.end());
 }

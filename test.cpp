@@ -13,26 +13,38 @@ void TestSimpleBuilder() {
 void TestOneStepBuilder() {
   {
     ExpressionBuilder builder{0, {{OperationType::add, 1}}};
-    AssertEqual(builder.build(), "(0) + 1", "One");
+    AssertEqual(builder.build(), "0 + 1", "One");
   }
   {
     ExpressionBuilder builder{0, {{OperationType::sub, 1}}};
-    AssertEqual(builder.build(), "(0) - 1", "Mul Zero");
+    AssertEqual(builder.build(), "0 - 1", "Mul Zero");
   }
   {
     ExpressionBuilder builder{0, {{OperationType::div, 1}}};
-    AssertEqual(builder.build(), "(0) / 1", "Div Zero");
+    AssertEqual(builder.build(), "0 / 1", "Div Zero");
   }
   {
     ExpressionBuilder builder{0, {{OperationType::mul, 1}}};
-    AssertEqual(builder.build(), "(0) * 1", "Mul Zero");
+    AssertEqual(builder.build(), "0 * 1", "Mul Zero");
   }
 }
 
 void TestSeveralStepsBuilder() {
-  ExpressionBuilder builder{
-      2, {{OperationType::add, 1}, {OperationType::add, -3}}};
-  AssertEqual(builder.build(), "((2) + 1) + -3", "Complex");
+  {
+    ExpressionBuilder builder{
+        2, {{OperationType::add, 1}, {OperationType::add, -3}}};
+    AssertEqual(builder.build(), "2 + 1 + -3", "Complex 1");
+  }
+  {
+    ExpressionBuilder builder{
+        2, {{OperationType::mul, 1}, {OperationType::add, -3}}};
+    AssertEqual(builder.build(), "2 * 1 + -3", "Complex 2");
+  }
+  {
+    ExpressionBuilder builder{
+        2, {{OperationType::add, 1}, {OperationType::mul, -3}}};
+    AssertEqual(builder.build(), "(2 + 1) * -3", "Complex 3");
+  }
 }
 
 void RunAllTests() {
