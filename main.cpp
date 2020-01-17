@@ -1,23 +1,28 @@
+#include "figure.h"
 #include "test.h"
+#include <iomanip>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 using namespace std;
 
-class Animal {
-public:
-  Animal(const string &name) : Name(name) {}
-
-  const string Name;
-};
-
-class Dog : public Animal {
-public:
-  Dog(const string &name) : Animal(name) {}
-
-  void Bark() { cout << Name << " barks: woof!" << endl; }
-};
-
 int main() {
-  RunAllTests();
+  vector<shared_ptr<Figure>> figures;
+  for (string line; getline(cin, line);) {
+    istringstream is(line);
+
+    string command;
+    is >> command;
+    if (command == "ADD") {
+      figures.push_back(CreateFigure(is));
+    } else if (command == "PRINT") {
+      for (const auto &current_figure : figures) {
+        cout << fixed << setprecision(3) << current_figure->Name() << " "
+             << current_figure->Perimeter() << " " << current_figure->Area()
+             << endl;
+      }
+    }
+  }
   return 0;
 }

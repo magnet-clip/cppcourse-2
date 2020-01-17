@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 project (main)
 include_directories(${PROJECT_SOURCE_DIR})
-add_executable(main main.cpp test_runner.cpp test.cpp)
+add_executable(main main.cpp test_runner.cpp test.cpp figure.cpp circle.cpp rectangle.cpp triangle.cpp)
 add_executable(coursera coursera.cpp)
 set_property(TARGET main PROPERTY CXX_STANDARD 17)
