@@ -88,8 +88,6 @@ public:
     }
   }
 
-  void a();
-
   ~TestRunner();
 
 private:

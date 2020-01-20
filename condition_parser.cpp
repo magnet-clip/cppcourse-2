@@ -4,13 +4,21 @@
 #include <map>
 using namespace std;
 
-template <class It>
-shared_ptr<Node> ParseComparison(It& current, It end) {
+enum class Comparison {
+  Less,
+  LessOrEqual,
+  Greater,
+  GreaterOrEqual,
+  Equal,
+  NotEqual
+};
+
+template <class It> shared_ptr<Node> ParseComparison(It &current, It end) {
   if (current == end) {
     throw logic_error("Expected column name: date or event");
   }
 
-  Token& column = *current;
+  Token &column = *current;
   if (column.type != TokenType::COLUMN) {
     throw logic_error("Expected column name: date or event");
   }
@@ -20,7 +28,7 @@ shared_ptr<Node> ParseComparison(It& current, It end) {
     throw logic_error("Expected comparison operation");
   }
 
-  Token& op = *current;
+  Token &op = *current;
   if (op.type != TokenType::COMPARE_OP) {
     throw logic_error("Expected comparison operation");
   }
@@ -47,7 +55,7 @@ shared_ptr<Node> ParseComparison(It& current, It end) {
     throw logic_error("Unknown comparison token: " + op.value);
   }
 
-  const string& value = current->value;
+  const string &value = current->value;
   ++current;
 
   if (column.value == "date") {
@@ -59,7 +67,7 @@ shared_ptr<Node> ParseComparison(It& current, It end) {
 }
 
 template <class It>
-shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
+shared_ptr<Node> ParseExpression(It &current, It end, unsigned precedence) {
   if (current == end) {
     return shared_ptr<Node>();
   }
@@ -67,12 +75,12 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   shared_ptr<Node> left;
 
   if (current->type == TokenType::PAREN_LEFT) {
-    ++current;  // consume '('
+    ++current; // consume '('
     left = ParseExpression(current, end, 0u);
     if (current == end || current->type != TokenType::PAREN_RIGHT) {
       throw logic_error("Missing right paren");
     }
-    ++current;  // consume ')'
+    ++current; // consume ')'
   } else {
     left = ParseComparison(current, end);
   }
@@ -92,7 +100,7 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
       break;
     }
 
-    ++current;  // consume op
+    ++current; // consume op
 
     left = make_shared<LogicalOperationNode>(
         logical_operation, left,
@@ -102,7 +110,7 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   return left;
 }
 
-shared_ptr<Node> ParseCondition(istream& is) {
+shared_ptr<Node> ParseCondition(istream &is) {
   auto tokens = Tokenize(is);
   auto current = tokens.begin();
   auto top_node = ParseExpression(current, tokens.end(), 0u);
