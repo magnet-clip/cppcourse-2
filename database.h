@@ -12,5 +12,7 @@ public:
   void Print(const std::ostream &ss) const;
   bool Last(const Date &date) const;
   template <class Predicate> int RemoveIf(Predicate p) const {}
+
+  // TODO what return type, vector of what?
   template <class Predicate> std::vector<bool> FindIf(Predicate p) const {}
 };
