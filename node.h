@@ -13,6 +13,7 @@ enum class Comparison {
 };
 
 enum class LogicalOperation { And, Or };
+
 class Node {
 public:
   bool Evaluate(const Date &date, const std::string &event);
