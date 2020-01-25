@@ -1,4 +1,5 @@
 #include "date.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -65,4 +66,13 @@ Date ParseDate(std::istringstream &stream) {
   }
 
   return Date(year, month, day);
+}
+
+ostream &operator<<(ostream &stream, const Date &date) {
+  stream << setw(4) << setfill('0') << date.GetYear();
+  stream << "-";
+  stream << setw(2) << setfill('0') << date.GetMonth();
+  stream << "-";
+  stream << setw(2) << setfill('0') << date.GetDay();
+  return stream;
 }

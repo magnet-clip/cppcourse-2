@@ -18,7 +18,7 @@ class Database {
 
   // TODO what return type, vector of what?
   template <class Predicate>
-  std::vector<bool> FindIf(Predicate p) const {
-    return std::vector<bool>{};
+  std::vector<std::pair<Date, std::string>> FindIf(Predicate p) const {
+    return std::vector<std::pair<Date, std::string>>{};
   }
 };

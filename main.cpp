@@ -3,6 +3,7 @@
 #include "date.h"
 #include "node.h"
 #include "test_runner.h"
+#include "util.h"
 
 #include <iostream>
 #include <stdexcept>
