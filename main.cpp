@@ -5,12 +5,20 @@
 #include "test_runner.h"
 #include "util.h"
 
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <stdexcept>
 
 using namespace std;
 
-string ParseEvent(istream &is) {}
+string ParseEvent(istream &is) {
+  string s;
+  getline(is, s);
+  s.erase(s.begin(),
+          find_if(s.begin(), s.end(), [](int ch) { return !isspace(ch); }));
+  return s;
+}
 
 void TestAll();
 /*
