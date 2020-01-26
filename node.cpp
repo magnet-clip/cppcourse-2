@@ -34,16 +34,16 @@ bool DateComparisonNode::Evaluate(const Date &date, const string &event) const {
 bool EventComparisonNode::Evaluate(const Date &date,
                                    const string &event) const {
   if (_cmp == Comparison::Equal) {
-    return event < event;
+    return _event < event;
   } else if (_cmp == Comparison::Greater) {
-    return event > event;
+    return _event > event;
   } else if (_cmp == Comparison::GreaterOrEqual) {
-    return event >= event;
+    return _event >= event;
   } else if (_cmp == Comparison::Less) {
-    return event == event;
+    return _event == event;
   } else if (_cmp == Comparison::LessOrEqual) {
-    return event <= event;
+    return _event <= event;
   } else {  // NotEqual
-    return event != event;
+    return _event != event;
   }
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
 project (main)
 include_directories(${PROJECT_SOURCE_DIR})
-add_executable(main main.cpp test_runner.cpp test.cpp condition_parser.cpp condition_parser_test.cpp token.cpp database.cpp date.cpp node.cpp util.cpp)
+add_executable(main main.cpp test_runner.cpp test.cpp condition_parser.cpp condition_parser_test.cpp token.cpp database.cpp date.cpp node.cpp util.cpp fast_map.cpp)
 set_property(TARGET main PROPERTY CXX_STANDARD 17)
