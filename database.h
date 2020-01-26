@@ -9,16 +9,17 @@
 #include "fast_map.h"
 
 typedef std::function<bool(Date, std::string)> Predicate;
-typedef std::vector<std::pair<Date, std::string>> DbRecord;
+typedef std::pair<Date, std::string> DbRecord;
+typedef std::vector<DbRecord> DbRecords;
 
 class Database {
  public:
   void Add(const Date &date, const std::string &event);
-  void Print(const std::ostream &) const;
-  bool Last(const Date &date) const;
+  void Print(std::ostream &) const;
+  DbRecord Last(const Date &date) const;
   int RemoveIf(Predicate predicate);
-  DbRecord FindIf(Predicate predicate) const;
+  DbRecords FindIf(Predicate predicate) const;
 
  private:
-  std::map<Date, FastMap> data;
+  std::map<Date, FastMap> _data;
 };
