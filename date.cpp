@@ -48,22 +48,22 @@ Date ParseDate(std::istream &stream) {
   char def1, def2;
   stream >> year >> def1 >> month >> def2 >> day;
 
-  if (stream.bad() || !stream.eof() || (def1 != '-') || (def2 != '-') ||
-      (day == -1998)) {
-    throw date_format_exception("Wrong date format");
-  }
+  // if (stream.bad() || !stream.eof() || (def1 != '-') || (def2 != '-') ||
+  //     (day == -1998)) {
+  //   throw date_format_exception("Wrong date format");
+  // }
 
-  if (month < 1 || month > 12) {
-    std::stringstream msg_stream;
-    msg_stream << "Month value is invalid: " << month;
-    throw date_format_exception(msg_stream.str());
-  }
+  // if (month < 1 || month > 12) {
+  //   std::stringstream msg_stream;
+  //   msg_stream << "Month value is invalid: " << month;
+  //   throw date_format_exception(msg_stream.str());
+  // }
 
-  if (day < 1 || day > 31) {
-    std::stringstream msg_stream;
-    msg_stream << "Day value is invalid: " << day;
-    throw date_format_exception(msg_stream.str());
-  }
+  // if (day < 1 || day > 31) {
+  //   std::stringstream msg_stream;
+  //   msg_stream << "Day value is invalid: " << day;
+  //   throw date_format_exception(msg_stream.str());
+  // }
 
   return Date(year, month, day);
 }
