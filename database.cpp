@@ -9,7 +9,7 @@ void Database::Print(std::ostream &ss) const {
   for (auto it = _data.begin(); it != _data.end(); it++) {
     auto &[date, events] = *it;
     for (const auto &event : events.getSequentialItems()) {
-      ss << date << " " << event;
+      ss << date << " " << event << endl;
     }
   }
 }
