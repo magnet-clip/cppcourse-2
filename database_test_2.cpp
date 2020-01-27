@@ -54,6 +54,42 @@ string DoFind(Database &db, const string &str) {
   return os.str();
 }
 
+void TestRustam() {
+  Database db;
+  db.Add({2017, 11, 21}, "Tuesday");
+  db.Add({2017, 11, 20}, "Monday");
+  db.Add({2017, 11, 21}, "Weekly meeting");
+  ostringstream out;
+  db.Print(out);
+  AssertEqual(out.str(),
+              "2017-11-20 Monday2017-11-21 Tuesday2017-11-21 Weekly meeting",
+              "Wow1");
+  istringstream is("event != \"Weekly meeting\"");
+  auto condition = ParseCondition(is);
+  auto predicate = [condition](const Date &date, const string &event) {
+    return condition->Evaluate(date, event);
+  };
+  AssertEqual(db.FindIf(predicate),
+              vector<string>{"2017-11-20 Monday", "2017-11-21 Tuesday"},
+              "Wow2");
+
+  AssertEqual(db.Last({2017, 11, 30}), "2017-11-21 Weekly meeting", "Wow3");
+  istringstream is1("date > 2017-11-20");
+  auto condition1 = ParseCondition(is1);
+  auto predicate1 = [condition1](const Date &date, const string &event) {
+    return condition1->Evaluate(date, event);
+  };
+  AssertEqual(db.RemoveIf(predicate1), 2, "Wow4");
+  AssertEqual(db.Last({2017, 11, 30}), "2017-11-20 Monday", "Wow5");
+
+  try {
+    db.Last({2017, 11, 01});
+    Assert(false, "Wow6");
+  } catch (invalid_argument &e) {
+    // ok
+  }
+}
+
 void TestDbAdd() {
   {
     Database db;
