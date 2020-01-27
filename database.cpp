@@ -62,15 +62,24 @@ int Database::RemoveIf(Predicate predicate) {
 
 vector<string> Database::FindIf(Predicate predicate) const {
   vector<string> res;
+
   for (auto it = _data.begin(); it != _data.end(); it++) {
-    auto &[date, events] = *it;
-    for (const auto &event : events.getSequentialItems()) {
-      if (predicate(date, event)) {
-        ostringstream item;
-        item << date << " " << event;
-        res.push_back(item.str());
+    auto date = it->first;
+    auto events = it->second;
+    const auto &items = events.getSequentialItems();
+    auto it1 = items.begin();
+    do {
+      it1 = find_if(it1, items.end(), [date, predicate](const string &str) {
+        return predicate(date, str);
+      });
+      if (it1 == items.end()) {
+        break;
       }
-    }
+      ostringstream item;
+      item << date << " " << *it1;
+      it1++;
+      res.push_back(item.str());
+    } while (true);
   }
   return res;
 }
