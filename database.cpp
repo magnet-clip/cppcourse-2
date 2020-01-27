@@ -40,14 +40,17 @@ int Database::RemoveIf(Predicate predicate) {
   for (auto it = _data.begin(); it != _data.end(); it++) {
     auto &[date, events] = *it;
     set<string> events_to_delete;
-    for (const auto &event : events.getSequentialItems()) {
+    const auto &items = events.getSequentialItems();
+    for (const auto &event : items) {
       if (predicate(date, event)) {
         events_to_delete.insert(event);
       }
     }
-    events.remove(events_to_delete);
-    if (events.getSequentialItems().size() == 0) {
+
+    if (events_to_delete.size() == items.size()) {
       dates_to_remove.insert(date);
+    } else {
+      events.remove(events_to_delete);
     }
     count += events_to_delete.size();
   }

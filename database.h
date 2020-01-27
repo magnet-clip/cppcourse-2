@@ -24,13 +24,13 @@ private:
   std::map<Date, FastMap> _data;
 };
 
-// void TestDatabase();
-// void TestRustam();
-// void TestEmptyNode();
-// void TestDbAdd();
-// void TestDbFind();
-// void TestDbLast();
-// void TestDbRemoveIf();
-// void TestInsertionOrder();
-// void TestsMyCustom();
-// void TestDatabase2();
+void TestDatabase();
+void TestRustam();
+void TestEmptyNode();
+void TestDbAdd();
+void TestDbFind();
+void TestDbLast();
+void TestDbRemoveIf();
+void TestInsertionOrder();
+void TestsMyCustom();
+void TestDatabase2();

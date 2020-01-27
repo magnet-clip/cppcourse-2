@@ -61,9 +61,10 @@ void TestRustam() {
   db.Add({2017, 11, 21}, "Weekly meeting");
   ostringstream out;
   db.Print(out);
-  AssertEqual(out.str(),
-              "2017-11-20 Monday2017-11-21 Tuesday2017-11-21 Weekly meeting",
-              "Wow1");
+  AssertEqual(
+      out.str(),
+      "2017-11-20 Monday\n2017-11-21 Tuesday\n2017-11-21 Weekly meeting\n",
+      "Wow1");
   istringstream is("event != \"Weekly meeting\"");
   auto condition = ParseCondition(is);
   auto predicate = [condition](const Date &date, const string &event) {
@@ -97,7 +98,7 @@ void TestDbAdd() {
     db.Add({2017, 1, 7}, "xmas");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year2017-01-07 xmas", out.str(),
+    AssertEqual("2017-01-01 new year\n2017-01-07 xmas\n", out.str(),
                 "straight ordering");
   }
   {
@@ -106,7 +107,7 @@ void TestDbAdd() {
     db.Add({2017, 1, 1}, "holiday");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year2017-01-01 holiday", out.str(),
+    AssertEqual("2017-01-01 new year\n2017-01-01 holiday\n", out.str(),
                 "several in one day");
   }
   {
@@ -115,7 +116,7 @@ void TestDbAdd() {
     db.Add({2017, 1, 1}, "new year");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year2017-01-07 xmas", out.str(),
+    AssertEqual("2017-01-01 new year\n2017-01-07 xmas\n", out.str(),
                 "reverse ordering");
   }
   {
@@ -126,7 +127,8 @@ void TestDbAdd() {
     db.Add({2017, 1, 1}, "new year");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year2017-01-01 xmas", out.str(), "uniq adding");
+    AssertEqual("2017-01-01 new year\n2017-01-01 xmas\n", out.str(),
+                "uniq adding");
   }
 }
 
@@ -197,7 +199,7 @@ void TestDbRemoveIf() {
     AssertEqual(1, DoRemove(db, R"(date == "2017-01-01")"), "Remove by date");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-07 xmas", out.str(), "Remove by date, left");
+    AssertEqual("2017-01-07 xmas\n", out.str(), "Remove by date, left");
   }
   {
     Database db;
@@ -206,7 +208,7 @@ void TestDbRemoveIf() {
     AssertEqual(1, DoRemove(db, R"(event == "xmas")"), "Remove by event");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year", out.str(), "Remove by event, left");
+    AssertEqual("2017-01-01 new year\n", out.str(), "Remove by event, left");
   }
   {
     Database db;
@@ -217,7 +219,8 @@ void TestDbRemoveIf() {
                 "Multiple remove by event");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-07 xmas", out.str(), "Multiple remove by event, left");
+    AssertEqual("2017-01-07 xmas\n", out.str(),
+                "Multiple remove by event, left");
   }
 }
 
@@ -230,8 +233,8 @@ void TestInsertionOrder() {
     db.Add({2017, 1, 7}, "pie");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2017-01-01 new year2017-01-07 xmas2017-01-07 "
-                "party2017-01-07 pie",
+    AssertEqual("2017-01-01 new year\n2017-01-07 xmas\n2017-01-07 "
+                "party\n2017-01-07 pie\n",
                 out.str(), "Remove by date, left");
   }
 }
@@ -246,8 +249,8 @@ void TestsMyCustom() {
     db.Add({2019, 12, 9}, "Read");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-09 Go home2019-12-09 Read2019-12-18 "
-                "Kolya2020-01-15 Katya2020-02-22 Riding",
+    AssertEqual("2019-12-09 Go home\n2019-12-09 Read\n2019-12-18 "
+                "Kolya\n2020-01-15 Katya\n2020-02-22 Riding\n",
                 out.str(), "Order of insertion");
   }
 
@@ -260,8 +263,8 @@ void TestsMyCustom() {
     db.Add({2019, 12, 3}, "e");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 a2019-12-01 b2019-12-02 c2019-12-02 "
-                "d2019-12-03 e",
+    AssertEqual("2019-12-01 a\n2019-12-01 b\n2019-12-02 c\n2019-12-02 "
+                "d\n2019-12-03 e\n",
                 out.str(), "Order of insertion");
   }
 
@@ -272,7 +275,7 @@ void TestsMyCustom() {
     db.Add({2019, 12, 1}, event);
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 a", out.str(), "My test 20");
+    AssertEqual("2019-12-01 a\n", out.str(), "My test 20");
   }
 
   {
@@ -285,8 +288,8 @@ void TestsMyCustom() {
     db.Add({2019, 12, 3}, "f");
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 a2019-12-01 b2019-12-02 c c2019-12-02 "
-                "d2019-12-03 e2019-12-03 f",
+    AssertEqual("2019-12-01 a\n2019-12-01 b\n2019-12-02 c c\n2019-12-02 "
+                "d\n2019-12-03 e\n2019-12-03 f\n",
                 out.str(), "My test 2");
     AssertEqual(1, DoRemove(db, R"(event == "c" OR event == "d")"),
                 "My test 3");
@@ -319,8 +322,8 @@ void TestsMyCustom() {
 
     ostringstream out2;
     db.Print(out2);
-    AssertEqual("2019-11-30 a2019-12-01 a2019-12-01 b2019-12-02 c "
-                "c2019-12-03 f",
+    AssertEqual("2019-11-30 a\n2019-12-01 a\n2019-12-01 b\n2019-12-02 c "
+                "c\n2019-12-03 f\n",
                 out2.str(), "My test 11");
   }
 
@@ -346,7 +349,7 @@ void TestsMyCustom() {
 
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 a", out.str(), "My test 14");
+    AssertEqual("2019-12-01 a\n", out.str(), "My test 14");
   }
 
   {
@@ -361,7 +364,7 @@ void TestsMyCustom() {
 
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 a2019-12-01 aa2019-12-02 a", out.str(),
+    AssertEqual("2019-12-01 a\n2019-12-01 aa\n2019-12-02 a\n", out.str(),
                 "My test 16");
   }
 
@@ -377,7 +380,7 @@ void TestsMyCustom() {
 
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 aa2019-12-01 aaa2019-12-02 b", out.str(),
+    AssertEqual("2019-12-01 aa\n2019-12-01 aaa\n2019-12-02 b\n", out.str(),
                 "My test 18");
   }
 
@@ -397,7 +400,7 @@ void TestsMyCustom() {
 
     ostringstream out;
     db.Print(out);
-    AssertEqual("2019-12-01 b2019-12-01 c", out.str(), "My test 22");
+    AssertEqual("2019-12-01 b\n2019-12-01 c\n", out.str(), "My test 22");
   }
 }
 
@@ -624,8 +627,8 @@ void TestDatabase2() {
                 "Remove several");
     ostringstream os;
     db.Print(os);
-    AssertEqual("2017-01-01 first2017-01-01 third2017-01-01 five", os.str(),
-                "Check print after remove several- 3");
+    AssertEqual("2017-01-01 first\n2017-01-01 third\n2017-01-01 five\n",
+                os.str(), "Check print after remove several- 3");
   }
 }
 
