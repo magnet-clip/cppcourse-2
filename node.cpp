@@ -17,33 +17,33 @@ bool LogicalOperationNode::Evaluate(const Date &date,
 
 bool DateComparisonNode::Evaluate(const Date &date, const string &event) const {
   if (_cmp == Comparison::Equal) {
-    return _date < date;
+    return date == _date;
   } else if (_cmp == Comparison::Greater) {
-    return _date > date;
+    return date > _date;
   } else if (_cmp == Comparison::GreaterOrEqual) {
-    return _date >= date;
+    return date >= _date;
   } else if (_cmp == Comparison::Less) {
-    return _date == date;
+    return date < _date;
   } else if (_cmp == Comparison::LessOrEqual) {
-    return _date <= date;
-  } else {  // NotEqual
-    return _date != date;
+    return date <= _date;
+  } else { // NotEqual
+    return date != _date;
   }
 }
 
 bool EventComparisonNode::Evaluate(const Date &date,
                                    const string &event) const {
   if (_cmp == Comparison::Equal) {
-    return _event < event;
+    return event == _event;
   } else if (_cmp == Comparison::Greater) {
-    return _event > event;
+    return event > _event;
   } else if (_cmp == Comparison::GreaterOrEqual) {
-    return _event >= event;
+    return event >= _event;
   } else if (_cmp == Comparison::Less) {
-    return _event == event;
+    return event < _event;
   } else if (_cmp == Comparison::LessOrEqual) {
-    return _event <= event;
-  } else {  // NotEqual
-    return _event != event;
+    return event <= _event;
+  } else { // NotEqual
+    return event != _event;
   }
 }
