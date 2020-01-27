@@ -14,7 +14,7 @@ void Database::Print(std::ostream &ss) const {
   }
 }
 
-DbRecord Database::Last(const Date &date) const {
+string Database::Last(const Date &date) const {
   FastMap item;
   auto actual_date = date;
   if (_data.count(date)) {
@@ -28,11 +28,14 @@ DbRecord Database::Last(const Date &date) const {
     }
   }
 
-  return make_pair(actual_date, item.last());
+  ostringstream res;
+  res << actual_date << " " << item.last();
+
+  return res.str();
 }
 
 int Database::RemoveIf(Predicate predicate) {
-  int count;
+  int count = 0;
   for (auto it = _data.begin(); it != _data.end(); it++) {
     auto &[date, events] = *it;
     set<string> events_to_delete;
@@ -47,13 +50,15 @@ int Database::RemoveIf(Predicate predicate) {
   return count;
 }
 
-DbRecords Database::FindIf(Predicate predicate) const {
-  DbRecords res;
+vector<string> Database::FindIf(Predicate predicate) const {
+  vector<string> res;
   for (auto it = _data.begin(); it != _data.end(); it++) {
     auto &[date, events] = *it;
     for (const auto &event : events.getSequentialItems()) {
       if (predicate(date, event)) {
-        res.push_back(make_pair(date, event));
+        ostringstream item;
+        item << date << " " << event;
+        res.push_back(item.str());
       }
     }
   }
