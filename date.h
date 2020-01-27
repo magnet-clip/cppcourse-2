@@ -5,17 +5,17 @@
 #include <string>
 
 class date_format_exception : std::exception {
- public:
+public:
   date_format_exception() : exception() {}
   date_format_exception(std::string msg) : exception(), message(msg) {}
   std::string getMessage() { return message; }
 
- private:
+private:
   const std::string message;
 };
 
 class Date {
- public:
+public:
   Date() : year(0), month(0), day(0) {}
   Date(int year, int month, int day) : year(year), month(month), day(day) {}
   // Date(const std::string &str);
@@ -23,7 +23,7 @@ class Date {
   int GetMonth() const { return month; }
   int GetDay() const { return day; }
 
- private:
+private:
   int year, month, day;
 };
 
@@ -36,4 +36,4 @@ bool operator!=(const Date &lhs, const Date &rhs);
 
 std::ostream &operator<<(std::ostream &stream, const Date &date);
 
-Date ParseDate(std::istringstream &stream);
+Date ParseDate(std::istream &stream);

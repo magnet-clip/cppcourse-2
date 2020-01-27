@@ -41,7 +41,7 @@ bool operator<=(const Date &lhs, const Date &rhs) {
   return (lhs == rhs) || (lhs < rhs);
 }
 
-Date ParseDate(std::istringstream &stream) {
+Date ParseDate(std::istream &stream) {
   int day = -1998;
   int year, month;
 
