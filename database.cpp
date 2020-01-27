@@ -36,6 +36,7 @@ string Database::Last(const Date &date) const {
 
 int Database::RemoveIf(Predicate predicate) {
   int count = 0;
+  set<Date> dates_to_remove;
   for (auto it = _data.begin(); it != _data.end(); it++) {
     auto &[date, events] = *it;
     set<string> events_to_delete;
@@ -45,7 +46,13 @@ int Database::RemoveIf(Predicate predicate) {
       }
     }
     events.remove(events_to_delete);
+    if (events.getSequentialItems().size() == 0) {
+      dates_to_remove.insert(date);
+    }
     count += events_to_delete.size();
+  }
+  for (const auto &date : dates_to_remove) {
+    _data.erase(date);
   }
   return count;
 }
